@@ -19,7 +19,7 @@ except urllib2.URLError, e:
         print e.reason
 
         
-content_pattern = re.compile('<span>.*?<a target="_blank".*?title="(.*?)"', re.S)
+content_pattern = re.compile('<span>.*?<a target="_blank" title="(.*?)"', re.S)
 content_list = re.findall(content_pattern, html)
 for item in content_list:
     print item
