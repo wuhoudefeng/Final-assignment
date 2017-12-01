@@ -1,0 +1,43 @@
+#-*-coding:GBK-*-  
+#author:zwg  
+'''  
+爬取某小说网站的免费小说  
+'''  
+import urllib  
+import urllib2  
+import re  
+url='http://www.bxwx8.org/b/8/8987/2093383.html'  
+url1='http://www.bxwx8.org/b/8/8987/2093%d.html'  
+def gethtml(url):  
+    page=urllib.urlopen(url)  
+    html=page.read()  
+    return html  
+def get_name_content(html):  
+    re1=re.compile('<title>.+?</title>')  
+    re2=re.compile('<div id="content"><div id="adright">.+?</div>')  
+    s1=re1.findall(html)  
+    s2=re2.findall(html)  
+    if len(s1)>0 and len(s2)>0:  
+        name=s1[0].replace('<title>','')  
+        name=name.replace('TXT下载-笔下文学</title>','')  
+        content=s2[0].replace('''<div id="content"><div id="adright">''','')  
+        content=content.replace('</div>','')  
+        content=content.replace('<br /><br />    ','\n\t')  
+        content = content.replace('    ', '')  
+    else:  
+        name=' '  
+        content=' '  
+    return name,content  
+def write_novel(i,file1):  
+    file1.writelines('\n\r')  
+    s=383+i;  
+    html = gethtml(url1 % s)  
+    name,content = get_name_content(html)  
+    file1.writelines(name)  
+    file1.writelines('\n\t')  
+    file1.writelines(content)  
+    file1.writelines('\n\n\n')  
+  
+file1=file('间客.txt','w+')  
+[write_novel(i,file1) for i in range(50)]  
+file1.close()  
